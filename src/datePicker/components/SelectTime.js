@@ -115,7 +115,7 @@ const TimeScroller = ({title, data, onChange}) => {
 };
 
 const SelectTime = () => {
-  const {options, state, utils, minuteInterval, mode, onTimeChange} = useCalendar();
+  const {options, state, utils, minuteInterval, mode, onTimeChange, showCloseButton, onCloseButtonPress} = useCalendar();
   const [mainState, setMainState] = state;
   const [show, setShow] = useState(false);
   const [time, setTime] = useState({
@@ -161,7 +161,7 @@ const SelectTime = () => {
         : '',
     });
     onTimeChange(utils.getFormated(newTime, 'timeFormat'));
-    mode !== 'time' &&
+    (mode !== 'time') &&
       setMainState({
         type: 'toggleTime',
       });
@@ -198,13 +198,17 @@ const SelectTime = () => {
         <TouchableOpacity style={style.button} activeOpacity={0.8} onPress={selectTime}>
           <Text style={style.btnText}>{utils.config.timeSelect}</Text>
         </TouchableOpacity>
-        {mode !== 'time' && (
+        {mode !== 'time' || showCloseButton && (
           <TouchableOpacity
             style={[style.button, style.cancelButton]}
-            onPress={() =>
+            onPress={() => {
               setMainState({
                 type: 'toggleTime',
               })
+              if(onCloseButtonPress){
+                onCloseButtonPress()
+              }
+            }
             }
             activeOpacity={0.8}>
             <Text style={style.btnText}>{utils.config.timeClose}</Text>
